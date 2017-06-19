@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22 f?vr. 2016 22:46:58 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="fr.utbm.entity.AccessPoint" optimistic-lock="version" schema="AccessPoint" table="access_points">
+    <id name="id" type="int">
+      <column name="access_point_id"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="mac_adr" type="char">
+      <column length="50" name="mac_adr" not-null="true"/>
+    </property>
+    <property name="location_id" type="int">
+      <column length="50" name="location_id" not-null="true"/>
+    </property>
+  </class>
+</hibernate-mapping>
