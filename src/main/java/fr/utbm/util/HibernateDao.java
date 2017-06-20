@@ -128,6 +128,9 @@ public class HibernateDao {
 	        });
 	        return callBack.getResults().isEmpty()?null:(TempRecord)callBack.getResults().get(0);
 	    }
+	    public List<TempRecord>getAllTempRecord(){
+	    	return getObjectList(TempRecord.class);
+	    }
 	    public boolean saveRssiRecord(RSSIRecord rssi){
 	        return saveOrUpdate(rssi);
 	    }
