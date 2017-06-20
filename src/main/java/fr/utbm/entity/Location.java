@@ -15,13 +15,10 @@ public class Location {
     private int Id;
     private double x;
     private double y;
-    private int map_id;
 
-    public Location(int Id, double x, double y, int map_id) {
-        this.Id = Id;
+    public Location(double x, double y) {
         this.x = x;
         this.y = y;
-        this.map_id = map_id;
     }
    
 
@@ -49,14 +46,6 @@ public class Location {
         this.y = y;
     }
 
-    public int getMap_id() {
-        return map_id;
-    }
-
-    public void setMap_id(int map_id) {
-        this.map_id = map_id;
-    }
-    
     
     
 }

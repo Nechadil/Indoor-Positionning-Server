@@ -11,6 +11,7 @@ import fr.utbm.entity.AccessPoint;
 import fr.utbm.entity.Location;
 import fr.utbm.entity.Map;
 import fr.utbm.entity.RSSIRecord;
+import fr.utbm.entity.TempRecord;
 
 public class HibernateDao {
 	private TransactionCallBack execTransactionProcess(ITransactionProcess itp) {
@@ -74,7 +75,7 @@ public class HibernateDao {
 	        TransactionCallBack callBack = execTransactionProcess((session)->{
 	            TransactionCallBack reply = new TransactionCallBack();
 	            for(Object obj : objs){
-	                session.persist(obj);
+	                session.saveOrUpdate(obj);
 	            }
 	            return reply;
 	        });
@@ -94,6 +95,39 @@ public class HibernateDao {
 	        return callBack.getResults();
 	    }
 	    
+	    public boolean saveTempRecord(TempRecord temp){
+	    	return saveOrUpdate(temp);
+	    }
+	    public TempRecord getTempRecord(int ap_id, double val){
+	        TransactionCallBack callBack = execTransactionProcess((session)->{
+	            TransactionCallBack reply = new TransactionCallBack<RSSIRecord>();
+	            Query query = session.createQuery("from temp t where t.ap_id = :ap_id and t.val :=val");
+	            query.setParameter("ap_id", ap_id);
+	            query.setParameter("val", val);
+	            List<Object> results = query.list();
+	            for(Object result : results){
+	                if(result instanceof RSSIRecord)
+	                    reply.getResults().add(result);
+	            }
+	            return reply;
+	        });
+	        return callBack.getResults().isEmpty()?null:(TempRecord)callBack.getResults().get(0);
+	    }
+
+	    public TempRecord getTempRecord(int ap_id){
+	        TransactionCallBack callBack = execTransactionProcess((session)->{
+	            TransactionCallBack reply = new TransactionCallBack<RSSIRecord>();
+	            Query query = session.createQuery("from temp t where t.ap_id = :ap_id");
+	            query.setParameter("ap_id", ap_id);
+	            List<Object> results = query.list();
+	            for(Object result : results){
+	                if(result instanceof RSSIRecord)
+	                    reply.getResults().add(result);
+	            }
+	            return reply;
+	        });
+	        return callBack.getResults().isEmpty()?null:(TempRecord)callBack.getResults().get(0);
+	    }
 	    public boolean saveRssiRecord(RSSIRecord rssi){
 	        return saveOrUpdate(rssi);
 	    }
@@ -149,7 +183,7 @@ public class HibernateDao {
 	        return (callBack.getResults().isEmpty()?null:(Map)callBack.getResults().get(0));
 	    }
 
-	    public List<AccessPoint> getAccessPoints(String apMacAddress) {
+	    public AccessPoint getAccessPoint(String apMacAddress) {
 	        TransactionCallBack callBack = execTransactionProcess((session)->{
 	            TransactionCallBack reply = new TransactionCallBack<AccessPoint>();
 	            Query query = session.createQuery("from access_points ap where ap.mac_adr = :adr");
@@ -161,10 +195,7 @@ public class HibernateDao {
 	            }
 	            return reply;
 	        });
-
-	        List<AccessPoint> reply = new ArrayList<>();
-	        callBack.getResults().forEach(result->reply.add((AccessPoint)result));
-	        return reply;
+	        return callBack.getResults().isEmpty()?null:(AccessPoint)callBack.getResults().get(0);
 	    }
 
 	    public int saveLocation(Location location) {
@@ -181,6 +212,22 @@ public class HibernateDao {
 	        return -1;
 	    }
 
+	    public Location getLocation(double x, double y) {
+	        TransactionCallBack callBack = execTransactionProcess((session)->{
+	            TransactionCallBack reply = new TransactionCallBack<Location>();
+	            Query query = session.createQuery("from Location loc where loc.x = :x and loc.y=:y");
+	            query.setParameter("x", x);
+	            query.setParameter("y",y);
+	            List<Object> results = query.list();
+	            for(Object result : results){
+	                if(result instanceof Location)
+	                    reply.getResults().add(result);
+	            }
+	            return reply;
+	        });
+	        return (callBack.getResults().isEmpty()?null:(Location)callBack.getResults().get(0));
+	    }
+	    
 	    public Location getLocation(int Location) {
 	        TransactionCallBack callBack = execTransactionProcess((session)->{
 	            TransactionCallBack reply = new TransactionCallBack<Location>();
@@ -195,6 +242,8 @@ public class HibernateDao {
 	        });
 	        return (callBack.getResults().isEmpty()?null:(Location)callBack.getResults().get(0));
 	    }
-	    
+	    public void clearTemp(){
+	    	//clear the values in the temp table
+	    }
 
 }
