@@ -32,7 +32,7 @@ public class CalibrationService {
 	public void sendPositionRequest(String mac){
 		String urlParameters = "mac="+mac;
 		for(String ip:apIP){
-			ip = "http://"+ip;
+			ip = "http://"+ip+"/getSignal";
 			//the result includes:
 			String result = HTTPConnection.executePost(ip, urlParameters);
 		}
